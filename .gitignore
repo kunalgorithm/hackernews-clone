@@ -10,7 +10,7 @@
 /build
 
 #server
-/server
+/server/node_modules
 
 # misc
 .DS_Store
