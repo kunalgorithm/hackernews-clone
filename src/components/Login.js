@@ -25,11 +25,23 @@ class Login extends Component {
     login: true, // switch between Login and SignUp
     email: "",
     password: "",
-    name: ""
+    name: "",
+    hasError: false
   };
 
   render() {
-    const { login, email, password, name } = this.state;
+    const { login, email, password, name, hasError } = this.state;
+    if (hasError) {
+      return (
+        <div>
+          <h2>Error</h2>
+
+          {hasError.graphQLErrors.map(({ message }, i) => (
+            <span key={i}>{message}</span>
+          ))}
+        </div>
+      );
+    }
     return (
       <div>
         <h4 className="mv3">{login ? "Login" : "Sign Up"}</h4>
@@ -60,14 +72,26 @@ class Login extends Component {
             mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
             variables={{ email, password, name }}
             onCompleted={data => this._confirm(data)}
+            onError={error => this._handleError(error)}
           >
-            {mutation => (
-              <div className="pointer mr2 button" onClick={mutation}>
-                {login ? "login" : "create account"}
-              </div>
-            )}
+            {(mutation, { error, loading }) => {
+              return (
+                <div>
+                  {loading && (
+                    <div>
+                      <span>Please wait...</span>
+                    </div>
+                  )}
+                  {error && <span>Error</span>}
+                  <div className="pointer mr2 button" onClick={mutation}>
+                    {login ? "login" : "create account"}
+                  </div>
+                </div>
+              );
+            }}
           </Mutation>
 
+          {/* Account button */}
           <div
             className="pointer button"
             onClick={() => this.setState({ login: !login })}
@@ -83,7 +107,10 @@ class Login extends Component {
     const { token } = this.state.login ? data.login : data.signup;
     this._saveUserData(token);
     this.props.history.push("/");
-    // ... you'll implement this 🔜
+  };
+
+  _handleError = error => {
+    this.setState({ hasError: error });
   };
 
   _saveUserData = token => {

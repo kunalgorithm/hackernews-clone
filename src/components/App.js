@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom";
 
 import "../styles/App.css";
 import Header from "./Header";
+import ErrorBoundary from "./ErrorBoundary";
 import CreateLink from "./CreateLink";
 import LinkList from "./LinkList";
 import Login from "./Login";
@@ -14,12 +15,14 @@ class App extends Component {
       <div className="center w85">
         <Header />
         <div className="ph3 pv1 background-gray">
-          <Switch>
-            <Route exact path="/" component={LinkList} />
-            <Route exact path="/create" component={CreateLink} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/search" component={Search} />
-          </Switch>
+          <ErrorBoundary>
+            <Switch>
+              <Route exact path="/" component={LinkList} />
+              <Route exact path="/create" component={CreateLink} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/search" component={Search} />
+            </Switch>
+          </ErrorBoundary>
         </div>
       </div>
     );
