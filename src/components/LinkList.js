@@ -25,6 +25,30 @@ export const FEED_QUERY = gql`
     }
   }
 `;
+
+const NEW_LINKS_SUBSCRIPTION = gql`
+  subscription {
+    newLink {
+      node {
+        id
+        url
+        description
+        createdAt
+        postedBy {
+          id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
 class LinkList extends Component {
   _updateCacheAfterVote = (store, createVote, linkId) => {
     const data = store.readQuery({ query: FEED_QUERY });
@@ -34,12 +58,35 @@ class LinkList extends Component {
     store.writeQuery({ query: FEED_QUERY, data });
   };
 
+  _subscribeToNewLinks = subscribeToMore => {
+    subscribeToMore({
+      document: NEW_LINKS_SUBSCRIPTION,
+
+      // just like a Redux reducer, the updateQuery determines how the store
+      // should be updated with information from server after the event
+      updateQuery: (prev, { subcriptionData }) => {
+        if (!subcriptionData.data) return prev;
+        const newLink = subcriptionData.data.newLink.node;
+
+        return Object.assign({}, prev, {
+          feed: {
+            links: [newLink, ...prev.feed.links],
+            count: prev.feed.links.length + 1,
+            __typename: prev.feed.__typename
+          }
+        });
+      }
+    });
+  };
+
   render() {
     return (
       <Query query={FEED_QUERY}>
-        {({ loading, error, data }) => {
+        {({ loading, error, data, subscribeToMore }) => {
           if (loading) return <div>Fetching</div>;
           if (error) return <div>Error</div>;
+          this._subscribeToNewLinks(subscribeToMore);
+
           const linksToRender = data.feed.links;
           return (
             <div>
