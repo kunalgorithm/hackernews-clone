@@ -2,6 +2,8 @@
 
 A Hackernews Clone built with GraphQL, React, Apollo, and Prisma.
 
+Demo Server playground: https://hackernews-graphql-js-wxvppapetp.now.sh/
+
 ## Usage
 
 Start the server
@@ -22,6 +24,9 @@ npm run start
 login
 <img src="./public/login.png" height="600px" width="auto">
 Sign Up
+
+<img src="./public/login.png" height="600px" width="auto">
+
 <img src="./public/signup.png" height="600px" width="auto">
 Search 
 Powered by Apollo Client 

@@ -17,7 +17,7 @@ import "./styles/index.css";
 import { AUTH_TOKEN } from "./constants";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000"
+  uri: process.env.SERVER_URL || "http://localhost:4000"
 });
 
 const authLink = setContext((_, { headers }) => {
