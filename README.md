@@ -2,7 +2,7 @@
 
 A Hackernews Clone built with GraphQL, React, Apollo, and Prisma.
 
-Demo Server playground: https://hackernews-graphql-js-wxvppapetp.now.sh/
+Demo Server playground: https://hn-server.now.sh/
 
 ## Usage
 

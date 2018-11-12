@@ -29,15 +29,15 @@ const authLink = setContext((_, { headers }) => {
     }
   };
 });
-const wsLink = new WebSocketLink({
-  uri: `ws://localhost:4000`,
-  options: {
-    reconnect: true,
-    connectionParams: {
-      authToken: localStorage.getItem(AUTH_TOKEN)
-    }
-  }
-});
+// const wsLink = new WebSocketLink({
+//   uri: "http://localhost:4000",
+//   options: {
+//     reconnect: true,
+//     connectionParams: {
+//       authToken: localStorage.getItem(AUTH_TOKEN)
+//     }
+//   }
+// });
 
 // split checks if the operation is a subscription, then passes to wsLink, else to httpLink
 const link = split(
@@ -45,7 +45,7 @@ const link = split(
     const { kind, operation } = getMainDefinition(query);
     return kind === "OperationDefinition" && operation === "subscription";
   },
-  wsLink,
+  // wsLink,
   authLink.concat(httpLink)
 );
 
